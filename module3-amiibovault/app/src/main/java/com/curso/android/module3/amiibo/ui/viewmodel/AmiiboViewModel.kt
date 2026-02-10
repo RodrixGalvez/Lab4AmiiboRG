@@ -108,7 +108,7 @@ sealed interface AmiiboUiState {
         val message: String,
         val errorType: ErrorType = ErrorType.UNKNOWN,
         val isRetryable: Boolean = true,
-        val cachedAmiibos: List<AmiiboEntity> = emptyList()
+        val cachedAmiibos: List<AmiiboEntity>? = null
     ) : AmiiboUiState
 }
 
@@ -151,7 +151,7 @@ class AmiiboViewModel(
     private val repository: AmiiboRepository
 ) : ViewModel() {
     sealed interface AmiiboUIEvent{
-        data class ShowScackbar(
+        data class ShowSnackbar(
             val message: String,
             val actionLabel: String? = null
         ): AmiiboUIEvent
@@ -475,7 +475,7 @@ class AmiiboViewModel(
                         isRefreshing = false
                     )
                     _events.tryEmit(
-                        AmiiboUIEvent.ShowScackbar(
+                        AmiiboUIEvent.ShowSnackbar(
                             message = e.message,
                             actionLabel = if (isRetryable) "Retry" else null
                         )
@@ -499,7 +499,7 @@ class AmiiboViewModel(
                         amiibos = cachedAmiibos,
                         isRefreshing = false
                     )
-                    _events.tryEmit(AmiiboUIEvent.ShowScackbar(msg, actionLabel = "Retry"))
+                    _events.tryEmit(AmiiboUIEvent.ShowSnackbar(msg, actionLabel = "Retry"))
                 } else {
                     _uiState.value = AmiiboUiState.Error(
                         message = msg,

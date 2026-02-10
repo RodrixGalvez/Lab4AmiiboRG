@@ -41,6 +41,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -145,8 +148,28 @@ fun AmiiboListScreen(
 
     // Estado para el dropdown del tamaño de página
     var showPageSizeDropdown by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect {
+            event -> when(event){
+                is AmiiboViewModel.AmiiboUIEvent.ShowSnackbar -> {
+                    val result = snackbarHostState.showSnackbar(
+                        message = event.message,
+                        actionLabel = event.actionLabel
+                    )
+                    if(result == SnackbarResult.ActionPerformed){
+                        viewModel.refreshAmiibos()
+                    }
+                }
+            }
+        }
+    }
 
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         topBar = {
             /**
              * TopAppBar de Material 3.
@@ -221,6 +244,7 @@ fun AmiiboListScreen(
                 )
             )
         }
+
     ) { paddingValues ->
         /**
          * =====================================================================
@@ -304,7 +328,7 @@ fun AmiiboListScreen(
              * - Solo ve "Reintentar" cuando tiene sentido
              */
             is AmiiboUiState.Error -> {
-                if (state.cachedAmiibos.isNotEmpty()) {
+                if (!state.cachedAmiibos.isNullOrEmpty()) {
                     // Hay datos en cache: mostrar datos + mensaje de error
                     Column(modifier = Modifier.padding(paddingValues)) {
                         ErrorBanner(

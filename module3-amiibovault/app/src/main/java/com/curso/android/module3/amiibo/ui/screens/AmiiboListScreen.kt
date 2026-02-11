@@ -273,88 +273,53 @@ fun AmiiboListScreen(
 
             // Estado de éxito con datos
             is AmiiboUiState.Success -> {
-                Column(modifier = Modifier.padding(paddingValues)) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                ) {
+
+
                     OutlinedTextField(
                         value = searchQuery,
-                        onValueChange = {viewModel.updateQuery(it)},
+                        onValueChange = { viewModel.updateQuery(it) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(12.dp),
-                        label = {Text("Buscar por nombre")},
+                        label = { Text("Buscar por nombre") },
                         singleLine = true,
                         trailingIcon = {
-                            if(searchQuery.isNotBlank()){
-                                IconButton(onClick = {viewModel.cleanSearch()}) {
+                            if (searchQuery.isNotBlank()) {
+                                IconButton(onClick = { viewModel.cleanSearch() }) {
                                     Icon(Icons.Default.Close, contentDescription = "Limpiar")
                                 }
                             }
                         }
                     )
 
-                    PullToRefreshBox(
-                        isRefreshing = state.isRefreshing,
-                        onRefresh = {viewModel.refreshAmiibos()},
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        AmiiboGrid(
-                            amiibos = state.amiibos,
-                            onAmiiboClick = onAmiiboClick,
 
-                            // Mientras buscas, desactiva paginación (recomendado)
-                            hasMorePages = hasMorePages && searchQuery.isBlank(),
-                            isLoadingMore = isLoadingMore && searchQuery.isBlank(),
-                            paginationError = if (searchQuery.isBlank()) paginationError else null,
-                            onLoadMore = { if (searchQuery.isBlank()) viewModel.loadNextPage() },
-                            onRetryLoadMore = { if (searchQuery.isBlank()) viewModel.retryLoadMore() },
-
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        PullToRefreshBox(
+                            isRefreshing = state.isRefreshing,
+                            onRefresh = { viewModel.refreshAmiibos() },
                             modifier = Modifier.fillMaxSize()
-                        )
+                        ) {
+                            AmiiboGrid(
+                                amiibos = state.amiibos,
+                                onAmiiboClick = onAmiiboClick,
+                                hasMorePages = hasMorePages && searchQuery.isBlank(),
+                                isLoadingMore = isLoadingMore && searchQuery.isBlank(),
+                                paginationError = if (searchQuery.isBlank()) paginationError else null,
+                                onLoadMore = { if (searchQuery.isBlank()) viewModel.loadNextPage() },
+                                onRetryLoadMore = { if (searchQuery.isBlank()) viewModel.retryLoadMore() },
+
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
                     }
                 }
-                /**
-                 * =====================================================================
-                 * PULL-TO-REFRESH (Material 3)
-                 * =====================================================================
-                 *
-                 * PullToRefreshBox es el componente oficial de Material 3 para
-                 * implementar el patrón "pull-to-refresh" (deslizar hacia abajo
-                 * para actualizar).
-                 *
-                 * CONCEPTO: Pull-to-Refresh
-                 * -------------------------
-                 * Es un patrón de UX muy común en apps móviles que permite al
-                 * usuario actualizar el contenido deslizando hacia abajo desde
-                 * la parte superior de la lista.
-                 *
-                 * Parámetros clave:
-                 * - isRefreshing: Controla si se muestra el indicador de carga
-                 * - onRefresh: Callback que se ejecuta cuando el usuario "suelta"
-                 *
-                 * VENTAJAS sobre LinearProgressIndicator manual:
-                 * 1. Animación nativa del sistema (familiar para el usuario)
-                 * 2. Gesture handling automático
-                 * 3. Integración con el scroll del contenido
-                 *
-                 * NOTA: Requiere @OptIn(ExperimentalMaterial3Api::class)
-                 */
-                PullToRefreshBox(
-                    isRefreshing = state.isRefreshing,
-                    onRefresh = { viewModel.refreshAmiibos() },
-                    modifier = Modifier.padding(paddingValues)
-                ) {
-                    // Grid de Amiibos con paginación
-                    AmiiboGrid(
-                        amiibos = state.amiibos,
-                        onAmiiboClick = onAmiiboClick,
-                        hasMorePages = hasMorePages,
-                        isLoadingMore = isLoadingMore,
-                        paginationError = paginationError,
-                        onLoadMore = { viewModel.loadNextPage() },
-                        onRetryLoadMore = { viewModel.retryLoadMore() },
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
             }
+
 
             /**
              * Estado de error con tipo específico.

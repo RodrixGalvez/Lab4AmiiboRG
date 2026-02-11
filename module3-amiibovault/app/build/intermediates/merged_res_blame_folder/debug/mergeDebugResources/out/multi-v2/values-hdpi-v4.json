@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.curso.android.module3.amiibo.app-mergeDebugResources-64:/values-hdpi-v4/values-hdpi-v4.xml",
+            "map": [
+                {
+                    "source": "/Users/rodrixgalvez/.gradle/caches/9.1.0/transforms/fce95fe3c72e50c6c6f3de1aa61c535b/transformed/appcompat-1.7.0/res/values-hdpi-v4/values-hdpi-v4.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "6",
+                        "endColumns": "13",
+                        "endOffsets": "327"
+                    }
+                }
+            ]
+        }
+    ]
+}

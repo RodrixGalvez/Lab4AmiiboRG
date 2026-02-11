@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#E60012</color>
+    <string name="amiibo_image_description">Imagen de %1$s</string>
+    <string name="amiibo_series">Serie Amiibo</string>
+    <string name="app_name">Amiibo Vault</string>
+    <string name="back">Volver</string>
+    <string name="character">Personaje</string>
+    <string name="compatible_games">Juegos compatibles</string>
+    <string name="error_loading">Error al cargar</string>
+    <string name="game_series">Serie de juego</string>
+    <string name="loading_amiibos">Cargando Amiibos...</string>
+    <string name="loading_detail">Cargando detalle...</string>
+    <string name="not_available">No disponible</string>
+    <string name="region_au">Australia</string>
+    <string name="region_eu">Europa</string>
+    <string name="region_jp">Japón</string>
+    <string name="region_na">Norteamérica</string>
+    <string name="release_dates">Fechas de lanzamiento</string>
+    <string name="retry">Reintentar</string>
+    <string name="type">Tipo</string>
+    <style name="Theme.AmiiboVault" parent="android:Theme.Material.Light.NoActionBar">
+        
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>

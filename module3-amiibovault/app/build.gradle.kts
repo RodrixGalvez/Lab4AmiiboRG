@@ -15,6 +15,7 @@
 // ============================================================================
 
 plugins {
+
     // Plugin de aplicación Android
     alias(libs.plugins.android.application)
     // Soporte de Kotlin para Android

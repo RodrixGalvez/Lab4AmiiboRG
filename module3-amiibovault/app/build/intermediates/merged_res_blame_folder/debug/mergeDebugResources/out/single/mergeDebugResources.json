@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "com.curso.android.module3.amiibo.app-debug-66:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.curso.android.module3.amiibo.app-main-68:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.curso.android.module3.amiibo.app-debug-66:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.curso.android.module3.amiibo.app-main-68:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.curso.android.module3.amiibo.app-debug-66:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.curso.android.module3.amiibo.app-main-68:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    }
+]

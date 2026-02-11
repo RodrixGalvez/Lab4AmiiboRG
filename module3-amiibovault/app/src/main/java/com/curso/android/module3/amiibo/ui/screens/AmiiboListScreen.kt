@@ -77,6 +77,9 @@ import com.curso.android.module3.amiibo.domain.error.ErrorType
 import com.curso.android.module3.amiibo.ui.viewmodel.AmiiboUiState
 import com.curso.android.module3.amiibo.ui.viewmodel.AmiiboViewModel
 import org.koin.androidx.compose.koinViewModel
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.runtime.collectAsState
 
 /**
  * ============================================================================
@@ -149,6 +152,7 @@ fun AmiiboListScreen(
     // Estado para el dropdown del tamaño de página
     var showPageSizeDropdown by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
+    val searchQuery by viewModel.searchQ.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.events.collect {
@@ -269,6 +273,44 @@ fun AmiiboListScreen(
 
             // Estado de éxito con datos
             is AmiiboUiState.Success -> {
+                Column(modifier = Modifier.padding(paddingValues)) {
+                    OutlinedTextField(
+                        value = searchQuery,
+                        onValueChange = {viewModel.updateQuery(it)},
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        label = {Text("Buscar por nombre")},
+                        singleLine = true,
+                        trailingIcon = {
+                            if(searchQuery.isNotBlank()){
+                                IconButton(onClick = {viewModel.cleanSearch()}) {
+                                    Icon(Icons.Default.Close, contentDescription = "Limpiar")
+                                }
+                            }
+                        }
+                    )
+
+                    PullToRefreshBox(
+                        isRefreshing = state.isRefreshing,
+                        onRefresh = {viewModel.refreshAmiibos()},
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        AmiiboGrid(
+                            amiibos = state.amiibos,
+                            onAmiiboClick = onAmiiboClick,
+
+                            // Mientras buscas, desactiva paginación (recomendado)
+                            hasMorePages = hasMorePages && searchQuery.isBlank(),
+                            isLoadingMore = isLoadingMore && searchQuery.isBlank(),
+                            paginationError = if (searchQuery.isBlank()) paginationError else null,
+                            onLoadMore = { if (searchQuery.isBlank()) viewModel.loadNextPage() },
+                            onRetryLoadMore = { if (searchQuery.isBlank()) viewModel.retryLoadMore() },
+
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                }
                 /**
                  * =====================================================================
                  * PULL-TO-REFRESH (Material 3)

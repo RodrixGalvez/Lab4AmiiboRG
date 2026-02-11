@@ -277,6 +277,39 @@ public class AmiiboDao_Impl(
     }
   }
 
+  public override fun searchAmiibos(query: String): Flow<List<AmiiboEntity>> {
+    val _sql: String =
+        " SELECT * FROM amiibos WHERE name LIKE '%' || ? || '%' COLLATE NOCASE ORDER BY name ASC "
+    return createFlow(__db, false, arrayOf("amiibos")) { _connection ->
+      val _stmt: SQLiteStatement = _connection.prepare(_sql)
+      try {
+        var _argIndex: Int = 1
+        _stmt.bindText(_argIndex, query)
+        val _columnIndexOfId: Int = getColumnIndexOrThrow(_stmt, "id")
+        val _columnIndexOfName: Int = getColumnIndexOrThrow(_stmt, "name")
+        val _columnIndexOfGameSeries: Int = getColumnIndexOrThrow(_stmt, "gameSeries")
+        val _columnIndexOfImageUrl: Int = getColumnIndexOrThrow(_stmt, "imageUrl")
+        val _result: MutableList<AmiiboEntity> = mutableListOf()
+        while (_stmt.step()) {
+          val _item: AmiiboEntity
+          val _tmpId: String
+          _tmpId = _stmt.getText(_columnIndexOfId)
+          val _tmpName: String
+          _tmpName = _stmt.getText(_columnIndexOfName)
+          val _tmpGameSeries: String
+          _tmpGameSeries = _stmt.getText(_columnIndexOfGameSeries)
+          val _tmpImageUrl: String
+          _tmpImageUrl = _stmt.getText(_columnIndexOfImageUrl)
+          _item = AmiiboEntity(_tmpId,_tmpName,_tmpGameSeries,_tmpImageUrl)
+          _result.add(_item)
+        }
+        _result
+      } finally {
+        _stmt.close()
+      }
+    }
+  }
+
   public override suspend fun deleteAll() {
     val _sql: String = "DELETE FROM amiibos"
     return performSuspending(__db, false, true) { _connection ->

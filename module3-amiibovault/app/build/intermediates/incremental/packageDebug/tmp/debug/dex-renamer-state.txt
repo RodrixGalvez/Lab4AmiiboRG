@@ -1,4 +1,4 @@
-#Tue Feb 10 11:19:03 CST 2026
+#Tue Feb 10 22:55:32 CST 2026
 base.0=/Users/rodrixgalvez/Documents/Lab4AmiiboRG/module3-amiibovault/app/build/intermediates/dex/debug/mergeExtDexDebug/classes.dex
 base.1=/Users/rodrixgalvez/Documents/Lab4AmiiboRG/module3-amiibovault/app/build/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex
 base.10=/Users/rodrixgalvez/Documents/Lab4AmiiboRG/module3-amiibovault/app/build/intermediates/dex/debug/mergeProjectDexDebug/9/classes.dex

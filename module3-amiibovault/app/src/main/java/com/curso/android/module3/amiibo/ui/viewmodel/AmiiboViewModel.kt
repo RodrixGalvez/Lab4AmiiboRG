@@ -15,6 +15,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 
 
 /**
@@ -229,6 +232,16 @@ class AmiiboViewModel(
     /** Opciones de tamaño de página disponibles */
     val pageSizeOptions: List<Int> = AmiiboRepository.PAGE_SIZE_OPTIONS
 
+    private val _searchQ = MutableStateFlow("")
+    val searchQ: StateFlow<String> = _searchQ.asStateFlow()
+
+    fun updateQuery(query:String){
+        _searchQ.value = query
+    }
+
+    fun cleanSearch(){
+        _searchQ.value = ""
+    }
     /**
      * Flow de amiibos desde la base de datos.
      *
@@ -238,8 +251,14 @@ class AmiiboViewModel(
      *   de que el último suscriptor se va (optimización para rotación)
      * - emptyList(): Valor inicial mientras se carga
      */
-    private val amiibosFromDb: StateFlow<List<AmiiboEntity>> = repository
-        .observeAmiibos()
+    private val amiibosFromDb: StateFlow<List<AmiiboEntity>> = _searchQ
+        .debounce(200)
+        .distinctUntilChanged()
+        .flatMapLatest {q ->
+            val query = q.trim()
+            if(query.isBlank()) repository.observeAmiibos()
+            else repository.searchAmiibos(query)
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -388,6 +407,8 @@ class AmiiboViewModel(
         _paginationError.value = null
         loadNextPage()
     }
+
+
 
     /**
      * Carga la primera página de datos.

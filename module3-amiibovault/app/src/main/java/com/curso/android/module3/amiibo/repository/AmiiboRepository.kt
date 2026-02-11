@@ -79,6 +79,10 @@ class AmiiboRepository(
         return amiiboDao.getAllAmiibos()
     }
 
+
+    fun searchAmiibos(query: String): Flow<List<AmiiboEntity>>{
+        return amiiboDao.searchAmiibos(query)
+    }
     /**
      * =========================================================================
      * REFRESCAR AMIIBOS (SINCRONIZACIÓN)

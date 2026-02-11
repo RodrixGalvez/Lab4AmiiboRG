@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.Flow
  * ============================================================================
  */
 @Dao
-interface AmiiboDao {
+interface   AmiiboDao {
 
     /**
      * =========================================================================
@@ -187,6 +187,9 @@ interface AmiiboDao {
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDetail(detail: AmiiboDetailEntity)
+
+    @Query(" SELECT * FROM amiibos WHERE name LIKE '%' || :query || '%' COLLATE NOCASE ORDER BY name ASC ")
+    fun searchAmiibos(query: String): Flow<List<AmiiboEntity>>
 }
 
 /**
